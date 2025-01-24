@@ -3,61 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Découvrez des conseils et astuces pour pratiquer le handball amateur, améliorer vos performances et rejoindre un club local.">
-    <meta name="keywords" content="handball amateur, entraînement handball, clubs de handball, techniques de handball, sport collectif">
-    <meta name="author" content="Clément KERVICHE">
-    <title>Handball Amateur : Conseils et Entraînements pour Débutants</title>
+    <meta name="description" content="Participez à notre tournoi de handball amateur. Découvrez les détails, le lieu et les modalités d'inscription.">
+    <meta name="keywords" content="tournoi de handball, handball amateur, événement sportif">
+    <meta name="author" content="Handball Passion">
+    <title>Tournoi de Handball Amateur - Inscrivez-vous dès maintenant</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Balise de données structurées JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": "Tournoi de Handball Amateur 2025",
+        "description": "Rejoignez-nous pour un tournoi de handball amateur passionnant avec des équipes locales.",
+        "startDate": "2025-06-15T10:00:00",
+        "endDate": "2025-06-15T18:00:00",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "location": {
+            "@type": "Place",
+            "name": "Stade Municipal",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "123 Rue du Sport",
+                "addressLocality": "Paris",
+                "postalCode": "75012",
+                "addressCountry": "FR"
+            }
+        },
+        "organizer": {
+            "@type": "Organization",
+            "name": "Handball Passion",
+            "url": "https://www.handballpassion.fr"
+        },
+        "offers": {
+            "@type": "Offer",
+            "url": "https://www.handballpassion.fr/tournoi",
+            "price": "20",
+            "priceCurrency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "validFrom": "2025-05-01T00:00:00"
+        },
+        "performer": {
+            "@type": "SportsTeam",
+            "name": "Équipes locales de handball"
+        }
+    }
+    </script>
 </head>
 <body class="bg-gray-100 text-gray-800">
 
-    <header class="bg-blue-900 text-white py-6">
-        <div class="container mx-auto text-center">
-            <h1 class="text-3xl md:text-5xl font-bold">Handball Amateur</h1>
-            <p class="text-md md:text-lg mt-2">Conseils et Entraînements pour Débutants</p>
-        </div>
-        <nav class="mt-5">
-            <ul class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8">
-                <li><a href="entrainement.html" class="hover:text-gray-300 text-lg">Entraînement</a></li>
-                <li><a href="clubs.html" class="hover:text-gray-300 text-lg">Clubs locaux</a></li>
-                <li><a href="equipement.html" class="hover:text-gray-300 text-lg">Équipement</a></li>
-                <li><a href="contact.html" class="hover:text-gray-300 text-lg">Contact</a></li>
-            </ul>
-        </nav>
+    <!-- Header -->
+    <header class="bg-blue-900 text-white py-6 text-center">
+        <h1 class="text-4xl font-bold">Tournoi de Handball Amateur 2025</h1>
+        <p class="text-lg mt-2">Participez et vivez l'expérience unique du handball amateur</p>
     </header>
 
+    <!-- Section Event Details -->
     <main class="container mx-auto my-10 px-5">
         <section class="bg-white shadow-lg rounded-lg p-6 mb-8">
-            <h2 class="text-2xl md:text-3xl font-semibold text-blue-800">Pourquoi choisir le handball amateur ?</h2>
-            <p class="mt-4 text-justify">Le <strong class="font-bold">handball amateur</strong> est un excellent moyen de pratiquer un <em class="italic">sport collectif</em>, de développer ses <strong class="font-bold">capacités physiques</strong> et d’améliorer son esprit d’équipe.</p>
+            <h2 class="text-3xl font-semibold text-blue-800">Détails de l'événement</h2>
+            <ul class="mt-4 text-lg">
+                <li><strong>Date :</strong> 15 juin 2025</li>
+                <li><strong>Heure :</strong> 10h00 - 18h00</li>
+                <li><strong>Lieu :</strong> Stade Municipal, 123 Rue du Sport, Paris</li>
+                <li><strong>Tarif :</strong> 20€ par participant</li>
+                <li><strong>Organisateur :</strong> Handball Passion</li>
+            </ul>
         </section>
 
         <section class="bg-white shadow-lg rounded-lg p-6 mb-8">
-            <h2 class="text-2xl md:text-3xl font-semibold text-blue-800">Les bases du handball pour débutants</h2>
-            <p class="mt-4 text-justify">Pour bien débuter en <strong class="font-bold">handball amateur</strong>, il est essentiel de connaître les règles fondamentales, telles que le dribble, la passe et le tir.</p>
+            <h2 class="text-3xl font-semibold text-blue-800">Pourquoi participer ?</h2>
+            <p class="mt-4 text-justify">Le tournoi de handball amateur est une excellente occasion de se mesurer à d'autres équipes locales, de partager une passion commune et de profiter d'une journée conviviale remplie d'émotions sportives.</p>
         </section>
 
-        <section class="bg-white shadow-lg rounded-lg p-6 mb-8">
-            <h2 class="text-2xl md:text-3xl font-semibold text-blue-800">Comment choisir un club de handball amateur</h2>
-            <p class="mt-4 text-justify">Rejoindre un <em class="italic">club de handball</em> est la meilleure façon de progresser. Consultez notre <a href="clubs.html" class="text-blue-600 underline">liste des clubs</a> pour en savoir plus.</p>
-        </section>
-
-        <section class="bg-white shadow-lg rounded-lg p-6">
-            <h2 class="text-2xl md:text-3xl font-semibold text-blue-800">Les équipements indispensables</h2>
-            <p class="mt-4 text-justify">Pour pratiquer le <strong class="font-bold">handball amateur</strong> en toute sécurité, il est crucial d'avoir le bon équipement.</p>
+        <section class="bg-white shadow-lg rounded-lg p-6 text-center">
+            <h2 class="text-3xl font-semibold text-blue-800">Inscription</h2>
+            <p class="mt-4">Réservez votre place dès maintenant en cliquant ci-dessous :</p>
+            <a href="https://www.handballpassion.fr/tournoi" class="mt-4 inline-block bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition duration-300">
+                Inscrivez-vous maintenant
+            </a>
         </section>
     </main>
 
-    <footer class="bg-blue-900 text-white py-6 mt-10">
-        <div class="container mx-auto text-center">
-            <p class="text-sm md:text-base">&copy; 2025 Handball Passion. Tous droits réservés.</p>
-            <nav class="mt-4">
-                <ul class="flex flex-col md:flex-row justify-center space-y-3 md:space-y-0 md:space-x-6">
-                    <li><a href="mentions-legales.html" class="hover:text-gray-300">Mentions légales</a></li>
-                    <li><a href="politique-confidentialite.html" class="hover:text-gray-300">Politique de confidentialité</a></li>
-                </ul>
-            </nav>
-        </div>
+    <!-- Footer -->
+    <footer class="bg-blue-900 text-white py-6 text-center">
+        <p>&copy; 2025 Handball Passion. Tous droits réservés.</p>
     </footer>
 
 </body>
