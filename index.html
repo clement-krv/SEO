@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générer JSON-LD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-black text-white p-8">
+
+    <div class="max-w-4xl mx-auto bg-gray-900 p-8 rounded-lg shadow-lg">
+        <!-- En-tête avec logo -->
+        <div class="flex items-center justify-center mb-6">
+            <img src="https://img.icons8.com/ios-filled/100/ffffff/code.png" alt="Logo" class="w-12 h-12 mr-3">
+            <h1 class="text-3xl font-bold text-center text-blue-500">Générer JSON-LD pour Schema.org</h1>
+        </div>
+
+        <!-- Sélection du type -->
+        <div class="mb-6">
+            <label for="type" class="block text-lg font-medium text-gray-300">Sélectionnez un type :</label>
+            <select id="type" class="block w-full p-3 mb-6 border-2 border-gray-600 bg-gray-800 text-white rounded-md focus:ring-2 focus:ring-blue-500">
+                <option value="Person">Personne</option>
+                <option value="Organization">Organisation</option>
+                <option value="Event">Événement</option>
+                <option value="Product">Produit</option>
+                <option value="Offer">Offre</option>
+            </select>
+        </div>
+
+        <!-- Bouton pour générer le formulaire -->
+        <button id="generateFormButton" class="w-full py-3 px-4 mb-6 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 transition">
+            Générer le formulaire
+        </button>
+
+        <!-- Formulaire généré dynamiquement -->
+        <form id="dynamicForm" class="space-y-6"></form>
+
+        <!-- Bouton pour générer le JSON avec animation -->
+        <button id="generateJsonButton"
+            class="w-full py-3 px-4 bg-blue-700 text-white font-bold rounded-md hover:bg-blue-800 transition mt-6 transform hover:scale-105 focus:ring-4 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+            disabled>
+            Générer le JSON
+        </button>
+
+        <!-- Résultat JSON-LD -->
+        <div class="mt-8">
+            <div class="flex justify-between items-center">
+                <h3 class="text-2xl font-medium text-blue-400">Résultat JSON-LD :</h3>
+                <!-- Bouton de copie -->
+                <button id="copyJsonButton" class="bg-gray-700 text-white px-3 py-1 rounded-md text-sm hover:bg-gray-600 flex items-center">
+                    📋 Copier
+                </button>
+            </div>
+            <pre id="jsonLDResult" class="bg-gray-800 text-green-400 p-6 rounded-md mt-4 overflow-auto relative"></pre>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('generateFormButton').addEventListener('click', function () {
+            const selectedType = document.getElementById('type').value.toLowerCase();
+
+            fetch(`http://seo-schema.test/api/${selectedType}/properties`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const form = document.getElementById('dynamicForm');
+                const resultButton = document.getElementById('generateJsonButton');
+                form.innerHTML = ''; 
+                resultButton.disabled = false; 
+
+                Object.entries(data.properties).forEach(([key, type]) => {
+                    const fieldContainer = document.createElement('div');
+                    fieldContainer.classList.add('mb-6');
+
+                    const label = document.createElement('label');
+                    label.classList.add('block', 'text-lg', 'font-medium', 'text-gray-300');
+                    label.textContent = translateLabel(key);
+
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.name = key;
+                    input.classList.add('w-full', 'p-3', 'border-2', 'border-gray-600', 'bg-gray-800', 'text-white', 'rounded-md', 'focus:ring-2', 'focus:ring-blue-500');
+
+                    if (type === 'Place') {
+                        input.name = `location.name`;
+                        fieldContainer.appendChild(label);
+                        fieldContainer.appendChild(input);
+
+                        const addressLabel = document.createElement('label');
+                        addressLabel.textContent = "Adresse";
+                        addressLabel.classList.add('block', 'text-lg', 'font-medium', 'text-gray-300');
+
+                        const addressInput = document.createElement('input');
+                        addressInput.type = 'text';
+                        addressInput.name = `location.address`;
+                        addressInput.classList.add('w-full', 'p-3', 'border-2', 'border-gray-600', 'bg-gray-800', 'text-white', 'rounded-md', 'focus:ring-2', 'focus:ring-blue-500');
+
+                        fieldContainer.appendChild(addressLabel);
+                        fieldContainer.appendChild(addressInput);
+                    } else if (type === 'Organization') {
+                        input.name = `organizer.name`;
+                    }
+
+                    fieldContainer.appendChild(label);
+                    fieldContainer.appendChild(input);
+                    form.appendChild(fieldContainer);
+                });
+            })
+            .catch(error => console.error('Erreur:', error));
+        });
+
+        document.getElementById('generateJsonButton').addEventListener('click', function () {
+            const formData = new FormData(document.getElementById('dynamicForm'));
+            const data = {};
+
+            formData.forEach((value, key) => {
+                if (key.includes('.')) {
+                    const keys = key.split('.');
+                    let ref = data;
+
+                    for (let i = 0; i < keys.length; i++) {
+                        if (i === keys.length - 1) {
+                            ref[keys[i]] = value;
+                        } else {
+                            ref[keys[i]] = ref[keys[i]] || {};
+                            ref = ref[keys[i]];
+                        }
+                    }
+                } else {
+                    data[key] = value;
+                }
+            });
+
+            fetch(`http://seo-schema.test/api/${document.getElementById('type').value.toLowerCase()}/generate-json-ld`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({ properties: data })
+            })
+            .then(response => response.json())
+            .then(jsonData => {
+                document.getElementById('jsonLDResult').textContent = JSON.stringify(jsonData, null, 2);
+            })
+            .catch(error => console.error('Erreur lors de la génération du JSON:', error));
+        });
+
+        document.getElementById('copyJsonButton').addEventListener('click', function () {
+            const jsonText = document.getElementById('jsonLDResult').textContent;
+            navigator.clipboard.writeText(jsonText)
+                .then(() => {
+                    document.getElementById('copyJsonButton').textContent = "✅ Copié !";
+                    setTimeout(() => {
+                        document.getElementById('copyJsonButton').textContent = "📋 Copier";
+                    }, 2000);
+                })
+                .catch(err => console.error("Erreur lors de la copie:", err));
+        });
+
+        function translateLabel(key) {
+            const translations = {
+                'name': 'Nom',
+                'jobTitle': 'Poste',
+                'email': 'Email',
+                'telephone': 'Téléphone',
+                'streetAddress': 'Adresse',
+                'addressLocality': 'Ville',
+                'addressCountry': 'Pays',
+                'contactPoint': 'Point de contact',
+                'location': 'Emplacement',
+                'startDate': 'Date de début',
+                'endDate': 'Date de fin',
+                'description': 'Description',
+                'price': 'Prix',
+                'currency': 'Devise',
+                'url': 'URL',
+                'itemOffered': 'Produit offert',
+                'sku': 'SKU',
+                'brand': 'Marque',
+                'organizer': 'Organisateur'
+            };
+            return translations[key] || key.charAt(0).toUpperCase() + key.slice(1);
+        }
+    </script>
+
+</body>
+</html>
