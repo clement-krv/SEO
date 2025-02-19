@@ -122,9 +122,3 @@ Avec un JSON dans le corps de la requête :
   APP_DEBUG=true
   ```
 - Vérifiez que Herd fonctionne bien et que votre projet est bien listé.
-
-## 📜 Licence
-Ce projet est sous licence MIT. Vous êtes libre de l’utiliser et de le modifier selon vos besoins.
-
----
-🎉 **Bon développement !** 🚀
