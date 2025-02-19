@@ -88,37 +88,3 @@ Exemple pour un **Événement** :
 ```sh
 POST http://seo-schema.test/api/event/generate-json-ld
 ```
-Avec un JSON dans le corps de la requête :
-```json
-{
-  "properties": {
-    "name": "Conférence Tech",
-    "startDate": "2025-06-12",
-    "endDate": "2025-06-14",
-    "location": {
-      "name": "Paris Expo",
-      "address": "1 rue de la conférence, Paris"
-    },
-    "description": "Un événement technologique majeur",
-    "organizer": {
-      "@type": "Organization",
-      "name": "TechCorp"
-    }
-  }
-}
-```
-
-### 🛠️ Debugging & Erreurs
-- Vérifiez que les migrations sont bien appliquées :
-  ```sh
-  php artisan migrate:status
-  ```
-- Vérifiez que les routes sont bien définies :
-  ```sh
-  php artisan route:list
-  ```
-- En cas d’erreur **500**, activez le mode debug dans **.env** :
-  ```ini
-  APP_DEBUG=true
-  ```
-- Vérifiez que Herd fonctionne bien et que votre projet est bien listé.
