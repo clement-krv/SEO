@@ -4,23 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générer Djaysonne Elledé</title>
+    <title>Générer JSON-LD</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-black text-white p-8">
+<body class="bg-gray-900 text-white p-8">
 
-    <div class="max-w-4xl mx-auto bg-gray-900 p-8 rounded-lg shadow-lg">
-        <!-- En-tête avec logo -->
+    <div class="max-w-4xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
+        <!-- Logo & Titre -->
         <div class="flex items-center justify-center mb-6">
-            <img src="https://img.icons8.com/ios-filled/100/ffffff/code.png" alt="Logo" class="w-12 h-12 mr-3">
-            <h1 class="text-3xl font-bold text-center text-blue-500">Générer Djaysonne Elledé</h1>
+            <img src="JSON.svg"
+                 alt="Logo JSON" class="w-12 h-12 mr-4">
+            <h1 class="text-3xl font-bold text-blue-400">Générer JSON-LD pour Schema.org</h1>
         </div>
 
         <!-- Sélection du type -->
         <div class="mb-6">
-            <label for="type" class="block text-lg font-medium text-gray-300">Sélectionnez un type :</label>
-            <select id="type" class="block w-full p-3 mb-6 border-2 border-gray-600 bg-gray-800 text-white rounded-md focus:ring-2 focus:ring-blue-500">
+            <label for="type" class="block text-lg font-medium">Sélectionnez un type :</label>
+            <select id="type" class="block w-full p-3 mb-6 border-2 border-gray-500 bg-gray-700 rounded-md focus:ring-2 focus:ring-blue-400">
                 <option value="Person">Personne</option>
                 <option value="Organization">Organisation</option>
                 <option value="Event">Événement</option>
@@ -30,34 +31,55 @@
         </div>
 
         <!-- Bouton pour générer le formulaire -->
-        <button id="generateFormButton" class="w-full py-3 px-4 mb-6 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 transition">
+        <button id="generateFormButton" class="w-full py-3 px-4 mb-6 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600 transition duration-300">
             Générer le formulaire
         </button>
 
         <!-- Formulaire généré dynamiquement -->
         <form id="dynamicForm" class="space-y-6"></form>
 
-        <!-- Bouton pour générer le JSON avec animation -->
-        <button id="generateJsonButton"
-            class="w-full py-3 px-4 bg-blue-700 text-white font-bold rounded-md hover:bg-blue-800 transition mt-6 transform hover:scale-105 focus:ring-4 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-            disabled>
-            Générer le Djaysonne
+        <!-- Bouton pour générer le JSON -->
+        <button id="generateJsonButton" class="w-full py-3 px-4 bg-green-500 text-white font-bold rounded-md hover:bg-green-600 transition duration-300 mt-6 disabled:opacity-50 animate-pulse" disabled>
+            Générer le JSON
         </button>
 
-        <!-- Résultat JSON-LD -->
-        <div class="mt-8">
-            <div class="flex justify-between items-center">
-                <h3 class="text-2xl font-medium text-blue-400">Résultat JSON-LD :</h3>
-                <!-- Bouton de copie -->
-                <button id="copyJsonButton" class="bg-gray-700 text-white px-3 py-1 rounded-md text-sm hover:bg-gray-600 flex items-center">
-                    📋 Copier
-                </button>
-            </div>
-            <pre id="jsonLDResult" class="bg-gray-800 text-green-400 p-6 rounded-md mt-4 overflow-auto relative"></pre>
+        <!-- Résultat JSON-LD avec bouton de copie -->
+        <div class="relative mt-8">
+            <h3 class="text-2xl font-medium">Résultat JSON-LD :</h3>
+            <button id="copyJsonButton" class="absolute top-0 right-0 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600">
+                Copier
+            </button>
+            <pre id="jsonLDResult" class="bg-gray-700 text-green-300 p-6 rounded-md mt-4 overflow-auto"></pre>
         </div>
     </div>
 
     <script>
+        function translateLabel(key) {
+            const translations = {
+                'name': 'Nom',
+                'jobTitle': 'Poste',
+                'email': 'Email',
+                'telephone': 'Téléphone',
+                'streetAddress': 'Adresse',
+                'addressLocality': 'Ville',
+                'addressCountry': 'Pays',
+                'contactPoint': 'Point de contact',
+                'location': 'Emplacement',
+                'startDate': 'Date de début',
+                'endDate': 'Date de fin',
+                'description': 'Description',
+                'price': 'Prix',
+                'currency': 'Devise',
+                'url': 'URL',
+                'itemOffered': 'Produit offert',
+                'brand': 'Marque',
+                'sku': 'SKU',
+                'priceCurrency': 'Devise du prix',
+                'organizer': 'Organisateur'
+            };
+            return translations[key] || key.charAt(0).toUpperCase() + key.slice(1);
+        }
+
         document.getElementById('generateFormButton').addEventListener('click', function () {
             const selectedType = document.getElementById('type').value.toLowerCase();
 
@@ -77,32 +99,23 @@
                     fieldContainer.classList.add('mb-6');
 
                     const label = document.createElement('label');
-                    label.classList.add('block', 'text-lg', 'font-medium', 'text-gray-300');
+                    label.classList.add('block', 'text-lg', 'font-medium');
                     label.textContent = translateLabel(key);
 
                     const input = document.createElement('input');
                     input.type = 'text';
                     input.name = key;
-                    input.classList.add('w-full', 'p-3', 'border-2', 'border-gray-600', 'bg-gray-800', 'text-white', 'rounded-md', 'focus:ring-2', 'focus:ring-blue-500');
+                    input.classList.add('w-full', 'p-3', 'border-2', 'border-gray-500', 'bg-gray-700', 'rounded-md', 'focus:ring-2', 'focus:ring-blue-400');
 
-                    if (type === 'Place') {
-                        input.name = `location.name`;
-                        fieldContainer.appendChild(label);
-                        fieldContainer.appendChild(input);
-
-                        const addressLabel = document.createElement('label');
-                        addressLabel.textContent = "Adresse";
-                        addressLabel.classList.add('block', 'text-lg', 'font-medium', 'text-gray-300');
-
-                        const addressInput = document.createElement('input');
-                        addressInput.type = 'text';
-                        addressInput.name = `location.address`;
-                        addressInput.classList.add('w-full', 'p-3', 'border-2', 'border-gray-600', 'bg-gray-800', 'text-white', 'rounded-md', 'focus:ring-2', 'focus:ring-blue-500');
-
-                        fieldContainer.appendChild(addressLabel);
-                        fieldContainer.appendChild(addressInput);
-                    } else if (type === 'Organization') {
-                        input.name = `organizer.name`;
+                    if (key === 'organizer') {
+                        const select = document.createElement('select');
+                        select.name = 'organizerType';
+                        select.classList.add('w-full', 'p-3', 'border-2', 'border-gray-500', 'bg-gray-700', 'rounded-md', 'focus:ring-2', 'focus:ring-blue-400');
+                        select.innerHTML = `
+                            <option value="Organization">Organisation</option>
+                            <option value="Person">Personne</option>
+                        `;
+                        fieldContainer.appendChild(select);
                     }
 
                     fieldContainer.appendChild(label);
@@ -149,40 +162,12 @@
 
         document.getElementById('copyJsonButton').addEventListener('click', function () {
             const jsonText = document.getElementById('jsonLDResult').textContent;
-            navigator.clipboard.writeText(jsonText)
-                .then(() => {
-                    document.getElementById('copyJsonButton').textContent = "✅ Copié !";
-                    setTimeout(() => {
-                        document.getElementById('copyJsonButton').textContent = "📋 Copier";
-                    }, 2000);
-                })
-                .catch(err => console.error("Erreur lors de la copie:", err));
+            navigator.clipboard.writeText(jsonText).then(() => {
+                alert('JSON copié dans le presse-papier !');
+            }).catch(err => {
+                console.error('Erreur lors de la copie du JSON:', err);
+            });
         });
-
-        function translateLabel(key) {
-            const translations = {
-                'name': 'Nom',
-                'jobTitle': 'Poste',
-                'email': 'Email',
-                'telephone': 'Téléphone',
-                'streetAddress': 'Adresse',
-                'addressLocality': 'Ville',
-                'addressCountry': 'Pays',
-                'contactPoint': 'Point de contact',
-                'location': 'Emplacement',
-                'startDate': 'Date de début',
-                'endDate': 'Date de fin',
-                'description': 'Description',
-                'price': 'Prix',
-                'currency': 'Devise',
-                'url': 'URL',
-                'itemOffered': 'Produit offert',
-                'sku': 'SKU',
-                'brand': 'Marque',
-                'organizer': 'Organisateur'
-            };
-            return translations[key] || key.charAt(0).toUpperCase() + key.slice(1);
-        }
     </script>
 
 </body>

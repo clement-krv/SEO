@@ -9,14 +9,14 @@ class EventController extends Controller
 {
     public function getProperties()
     {
-        // Propriétés pour l'événement
+        // Définition des propriétés pour un événement
         $properties = [
             'name' => 'string',
             'startDate' => 'dateTime',
             'endDate' => 'dateTime',
             'location' => 'Place',
             'description' => 'string',
-            'organizer' => 'Organization',
+            'organizer' => 'Organization or Person', // Peut être une organisation ou une personne
         ];
 
         return response()->json([
@@ -27,32 +27,41 @@ class EventController extends Controller
 
     public function generateJsonLD(Request $request)
     {
-        // Récupération des données soumises par le formulaire
-        $properties = $request->input('properties');
+        // Récupération des données du formulaire
+        $properties = $request->input('properties', []);
+
         $jsonLD = [
             '@context' => 'https://schema.org',
             '@type' => 'Event',
         ];
 
-        // Construction du JSON-LD
+        // Vérification et construction du JSON-LD
         foreach ($properties as $key => $value) {
-            if ($key == 'location' && $value) {
+            if ($key === 'location' && is_array($value)) {
                 $jsonLD[$key] = [
                     '@type' => 'Place',
-                    'name' => $value['name'],
-                    'address' => $value['address'],
+                    'name' => $value['name'] ?? '',
+                    'address' => $value['address'] ?? '',
                 ];
-            } elseif ($key == 'organizer' && $value) {
-                $jsonLD[$key] = [
-                    '@type' => 'Organization',
-                    'name' => $value['name'],
-                ];
+            } elseif ($key === 'organizer' && is_array($value)) {
+                // Vérifier si c'est une organisation ou une personne
+                $organizerType = $request->input('properties.organizerType', 'Organization'); // Par défaut : Organisation
+                if ($organizerType === 'Person') {
+                    $jsonLD[$key] = [
+                        '@type' => 'Person',
+                        'name' => $value['name'] ?? '',
+                    ];
+                } else {
+                    $jsonLD[$key] = [
+                        '@type' => 'Organization',
+                        'name' => $value['name'] ?? '',
+                    ];
+                }
             } else {
                 $jsonLD[$key] = $value;
             }
         }
 
-        // Retourne la réponse JSON
         return response()->json($jsonLD);
     }
 }
