@@ -48,11 +48,6 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-Puis générez la clé d'application :
-```sh
-php artisan key:generate
-```
-
 ### 4️⃣ Lancer les migrations
 ```sh
 php artisan migrate
