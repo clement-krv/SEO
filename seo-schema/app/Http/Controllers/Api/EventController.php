@@ -9,14 +9,14 @@ class EventController extends Controller
 {
     public function getProperties()
     {
-        // Définition des propriétés pour un événement
+        // Définition des propriétés attendues pour un événement
         $properties = [
             'name' => 'string',
             'startDate' => 'dateTime',
             'endDate' => 'dateTime',
             'location' => 'Place',
             'description' => 'string',
-            'organizer' => 'Organization or Person', // Peut être une organisation ou une personne
+            'organizer' => 'Organization|Person', // Peut être soit une Organisation, soit une Personne
         ];
 
         return response()->json([
@@ -27,7 +27,6 @@ class EventController extends Controller
 
     public function generateJsonLD(Request $request)
     {
-        // Récupération des données du formulaire
         $properties = $request->input('properties', []);
 
         $jsonLD = [
@@ -35,28 +34,18 @@ class EventController extends Controller
             '@type' => 'Event',
         ];
 
-        // Vérification et construction du JSON-LD
         foreach ($properties as $key => $value) {
-            if ($key === 'location' && is_array($value)) {
+            if ($key == 'location' && is_array($value)) {
                 $jsonLD[$key] = [
                     '@type' => 'Place',
                     'name' => $value['name'] ?? '',
                     'address' => $value['address'] ?? '',
                 ];
-            } elseif ($key === 'organizer' && is_array($value)) {
-                // Vérifier si c'est une organisation ou une personne
-                $organizerType = $request->input('properties.organizerType', 'Organization'); // Par défaut : Organisation
-                if ($organizerType === 'Person') {
-                    $jsonLD[$key] = [
-                        '@type' => 'Person',
-                        'name' => $value['name'] ?? '',
-                    ];
-                } else {
-                    $jsonLD[$key] = [
-                        '@type' => 'Organization',
-                        'name' => $value['name'] ?? '',
-                    ];
-                }
+            } elseif ($key == 'organizer' && is_array($value)) {
+                $jsonLD[$key] = [
+                    '@type' => $value['@type'] ?? 'Organization',
+                    'name' => $value['name'] ?? '',
+                ];
             } else {
                 $jsonLD[$key] = $value;
             }
@@ -64,4 +53,6 @@ class EventController extends Controller
 
         return response()->json($jsonLD);
     }
+
+
 }

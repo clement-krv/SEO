@@ -11,17 +11,12 @@
 <body class="bg-gray-900 text-white p-8">
 
     <div class="max-w-4xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
-        <!-- Logo & Titre -->
-        <div class="flex items-center justify-center mb-6">
-            <img src="JSON.svg"
-                 alt="Logo JSON" class="w-12 h-12 mr-4">
-            <h1 class="text-3xl font-bold text-blue-400">Générer JSON-LD pour Schema.org</h1>
-        </div>
+        <h1 class="text-3xl font-bold mb-6 text-center text-blue-400">Générer DJAYSONNE ELLEDE</h1>
 
         <!-- Sélection du type -->
         <div class="mb-6">
             <label for="type" class="block text-lg font-medium">Sélectionnez un type :</label>
-            <select id="type" class="block w-full p-3 mb-6 border-2 border-gray-500 bg-gray-700 rounded-md focus:ring-2 focus:ring-blue-400">
+            <select id="type" class="block w-full p-3 mb-6 border-2 border-gray-600 bg-gray-700 rounded-md focus:ring-2 focus:ring-blue-500">
                 <option value="Person">Personne</option>
                 <option value="Organization">Organisation</option>
                 <option value="Event">Événement</option>
@@ -31,7 +26,7 @@
         </div>
 
         <!-- Bouton pour générer le formulaire -->
-        <button id="generateFormButton" class="w-full py-3 px-4 mb-6 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600 transition duration-300">
+        <button id="generateFormButton" class="w-full py-3 px-4 mb-6 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600 transition-all">
             Générer le formulaire
         </button>
 
@@ -39,47 +34,19 @@
         <form id="dynamicForm" class="space-y-6"></form>
 
         <!-- Bouton pour générer le JSON -->
-        <button id="generateJsonButton" class="w-full py-3 px-4 bg-green-500 text-white font-bold rounded-md hover:bg-green-600 transition duration-300 mt-6 disabled:opacity-50 animate-pulse" disabled>
-            Générer le JSON
+        <button id="generateJsonButton" class="w-full py-3 px-4 bg-green-500 text-white font-bold rounded-md hover:bg-green-600 transition-all mt-6 animate-pulse" disabled>
+            Générer le DJAYSONNE
         </button>
 
-        <!-- Résultat JSON-LD avec bouton de copie -->
-        <div class="relative mt-8">
-            <h3 class="text-2xl font-medium">Résultat JSON-LD :</h3>
-            <button id="copyJsonButton" class="absolute top-0 right-0 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600">
-                Copier
-            </button>
-            <pre id="jsonLDResult" class="bg-gray-700 text-green-300 p-6 rounded-md mt-4 overflow-auto"></pre>
+        <!-- Résultat JSON-LD -->
+        <h3 class="mt-8 text-2xl font-medium">Résultat JSON-LD :</h3>
+        <div class="relative">
+            <pre id="jsonLDResult" class="bg-gray-700 text-white p-6 rounded-md mt-4 overflow-auto"></pre>
+            <button id="copyJsonButton" class="absolute top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Copier</button>
         </div>
     </div>
 
     <script>
-        function translateLabel(key) {
-            const translations = {
-                'name': 'Nom',
-                'jobTitle': 'Poste',
-                'email': 'Email',
-                'telephone': 'Téléphone',
-                'streetAddress': 'Adresse',
-                'addressLocality': 'Ville',
-                'addressCountry': 'Pays',
-                'contactPoint': 'Point de contact',
-                'location': 'Emplacement',
-                'startDate': 'Date de début',
-                'endDate': 'Date de fin',
-                'description': 'Description',
-                'price': 'Prix',
-                'currency': 'Devise',
-                'url': 'URL',
-                'itemOffered': 'Produit offert',
-                'brand': 'Marque',
-                'sku': 'SKU',
-                'priceCurrency': 'Devise du prix',
-                'organizer': 'Organisateur'
-            };
-            return translations[key] || key.charAt(0).toUpperCase() + key.slice(1);
-        }
-
         document.getElementById('generateFormButton').addEventListener('click', function () {
             const selectedType = document.getElementById('type').value.toLowerCase();
 
@@ -90,37 +57,54 @@
             .then(response => response.json())
             .then(data => {
                 const form = document.getElementById('dynamicForm');
-                const resultButton = document.getElementById('generateJsonButton');
-                form.innerHTML = ''; 
-                resultButton.disabled = false; 
+                form.innerHTML = ''; // Réinitialiser le formulaire
+                document.getElementById('generateJsonButton').disabled = false;
 
                 Object.entries(data.properties).forEach(([key, type]) => {
-                    const fieldContainer = document.createElement('div');
-                    fieldContainer.classList.add('mb-6');
-
-                    const label = document.createElement('label');
-                    label.classList.add('block', 'text-lg', 'font-medium');
-                    label.textContent = translateLabel(key);
-
-                    const input = document.createElement('input');
-                    input.type = 'text';
-                    input.name = key;
-                    input.classList.add('w-full', 'p-3', 'border-2', 'border-gray-500', 'bg-gray-700', 'rounded-md', 'focus:ring-2', 'focus:ring-blue-400');
-
                     if (key === 'organizer') {
-                        const select = document.createElement('select');
-                        select.name = 'organizerType';
-                        select.classList.add('w-full', 'p-3', 'border-2', 'border-gray-500', 'bg-gray-700', 'rounded-md', 'focus:ring-2', 'focus:ring-blue-400');
-                        select.innerHTML = `
+                        // Ajout du sélecteur pour Personne ou Organisation
+                        const organizerContainer = document.createElement('div');
+                        organizerContainer.classList.add('mb-6');
+
+                        const organizerLabel = document.createElement('label');
+                        organizerLabel.classList.add('block', 'text-lg', 'font-medium');
+                        organizerLabel.textContent = 'Organisateur';
+
+                        const organizerSelect = document.createElement('select');
+                        organizerSelect.name = 'organizerType';
+                        organizerSelect.classList.add('block', 'w-full', 'p-3', 'border-2', 'border-gray-600', 'bg-gray-700', 'rounded-md');
+                        organizerSelect.innerHTML = `
                             <option value="Organization">Organisation</option>
                             <option value="Person">Personne</option>
                         `;
-                        fieldContainer.appendChild(select);
-                    }
 
-                    fieldContainer.appendChild(label);
-                    fieldContainer.appendChild(input);
-                    form.appendChild(fieldContainer);
+                        const organizerNameInput = document.createElement('input');
+                        organizerNameInput.type = 'text';
+                        organizerNameInput.name = 'organizer.name';
+                        organizerNameInput.placeholder = 'Nom de l\'organisateur';
+                        organizerNameInput.classList.add('w-full', 'p-3', 'border-2', 'border-gray-600', 'bg-gray-700', 'rounded-md', 'mt-2');
+
+                        organizerContainer.appendChild(organizerLabel);
+                        organizerContainer.appendChild(organizerSelect);
+                        organizerContainer.appendChild(organizerNameInput);
+                        form.appendChild(organizerContainer);
+                    } else {
+                        const fieldContainer = document.createElement('div');
+                        fieldContainer.classList.add('mb-6');
+
+                        const label = document.createElement('label');
+                        label.classList.add('block', 'text-lg', 'font-medium');
+                        label.textContent = translateLabel(key);
+
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.name = key;
+                        input.classList.add('w-full', 'p-3', 'border-2', 'border-gray-600', 'bg-gray-700', 'rounded-md');
+
+                        fieldContainer.appendChild(label);
+                        fieldContainer.appendChild(input);
+                        form.appendChild(fieldContainer);
+                    }
                 });
             })
             .catch(error => console.error('Erreur:', error));
@@ -148,6 +132,15 @@
                 }
             });
 
+            if (data.organizerType) {
+                data.organizer = {
+                    '@type': data.organizerType,
+                    'name': data['organizer.name'] || '',
+                };
+                delete data.organizerType;
+                delete data['organizer.name'];
+            }
+
             fetch(`http://seo-schema.test/api/${document.getElementById('type').value.toLowerCase()}/generate-json-ld`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -161,14 +154,40 @@
         });
 
         document.getElementById('copyJsonButton').addEventListener('click', function () {
-            const jsonText = document.getElementById('jsonLDResult').textContent;
-            navigator.clipboard.writeText(jsonText).then(() => {
-                alert('JSON copié dans le presse-papier !');
-            }).catch(err => {
-                console.error('Erreur lors de la copie du JSON:', err);
-            });
+            navigator.clipboard.writeText(document.getElementById('jsonLDResult').textContent);
+            alert("JSON copié !");
         });
+
+        function translateLabel(key) {
+            const translations = {
+                'name': 'Nom',
+                'jobTitle': 'Poste',
+                'email': 'Email',
+                'telephone': 'Téléphone',
+                'streetAddress': 'Adresse',
+                'addressLocality': 'Ville',
+                'addressCountry': 'Pays',
+                'contactPoint': 'Point de contact',
+                'location': 'Emplacement',
+                'startDate': 'Date de début',
+                'endDate': 'Date de fin',
+                'description': 'Description',
+                'price': 'Prix',
+                'currency': 'Devise',
+                'url': 'URL',
+                'itemOffered': 'Produit offert',
+                'brand': 'Marque',
+                'sku': 'SKU',
+                'priceCurrency': 'Devise du prix',
+                'organizer': 'Organisateur',
+                'seller': 'Vendeur',
+            };
+            return translations[key] || key;
+        }
     </script>
 
 </body>
 </html>
+
+
+
